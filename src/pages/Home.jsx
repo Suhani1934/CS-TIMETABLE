@@ -7,6 +7,28 @@ import { format } from "date-fns";
 
 const localizer = momentLocalizer(moment);
 
+// Normalize to dd-MM-yyyy
+const normalizeDate = (input) => {
+  if (!input) return "";
+  const parts = input.split(/[-/]/); // handles both "-" and "/"
+  if (parts.length !== 3) return "";
+  let [day, month, year] = parts;
+  day = day.padStart(2, "0");
+  month = month.padStart(2, "0");
+  return `${day}-${month}-${year}`;
+};
+
+// Convert date & time to JavaScript Date
+const parseDateTime = (dateStr, timeStr) => {
+  const normalized = normalizeDate(dateStr);
+  if (!normalized || !timeStr) return null;
+
+  const [day, month, year] = normalized.split("-");
+  const [startTime] = timeStr.split(" - ");
+  const dateTimeStr = `${year}-${month}-${day} ${startTime}`;
+  return new Date(dateTimeStr);
+};
+
 const Home = () => {
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "dd-MM-yyyy"));
@@ -15,12 +37,10 @@ const Home = () => {
 
   useEffect(() => {
     const fetchGoogleSheetData = async () => {
-      // 🔐 Fetch secrets from .env file
       const SHEET_ID = import.meta.env.VITE_SHEET_ID;
       const API_KEY = import.meta.env.VITE_GOOGLE_SHEET_API_KEY;
-      const SHEET_NAME = import.meta.env.VITE_SHEET_NAME; // 👈 Name of the tab/sheet
+      const SHEET_NAME = import.meta.env.VITE_SHEET_NAME;
 
-      // ✅ Google Sheets API URL — fetches the entire sheet
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
 
       try {
@@ -32,13 +52,9 @@ const Home = () => {
           return;
         }
 
-        // 👇 Headers from the first row of the sheet
         const headers = data.values[0];
-
-        // 👇 Remaining rows as data
         const rows = data.values.slice(1);
 
-        // 🔄 Convert rows to objects using headers
         const jsonData = rows.map((row) => {
           const rowData = {};
           headers.forEach((header, index) => {
@@ -47,24 +63,23 @@ const Home = () => {
           return rowData;
         });
 
-        // ✅ Store all data in state
         setAllClasses(jsonData);
 
         const today = format(new Date(), "dd-MM-yyyy");
-
-        // 📆 Filter today’s classes
-        const todayClasses = jsonData.filter((cls) => cls.date === today);
+        const todayClasses = jsonData.filter((cls) => normalizeDate(cls.date) === today);
         setClassesOnDate(todayClasses);
 
-        // 📅 Prepare events for calendar view
+        // Prepare calendar events
         const events = jsonData
           .filter((cls) => cls.time && cls.date)
           .map((cls) => {
-            const [startTime, endTime] = cls.time.split(" - ");
-            const [day, month, year] = cls.date.split("-");
-            const formattedDate = `${year}-${month}-${day}`;
-            const start = new Date(`${formattedDate}T${startTime}`);
-            const end = new Date(`${formattedDate}T${endTime}`);
+            const [startStr, endStr] = cls.time.split(" - ");
+            const start = parseDateTime(cls.date, startStr);
+            const end = parseDateTime(cls.date, endStr);
+
+            if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime())) {
+              return null;
+            }
 
             return {
               id: cls.id,
@@ -72,7 +87,8 @@ const Home = () => {
               start,
               end,
             };
-          });
+          })
+          .filter(Boolean); // Remove any nulls
 
         setCalendarEvents(events);
       } catch (error) {
@@ -83,11 +99,14 @@ const Home = () => {
     fetchGoogleSheetData();
   }, []);
 
-  // 🔁 When a date is clicked in the calendar
-  const handleDateSelect = (slotInfo) => {
-    const clickedDate = format(slotInfo.start, "dd-MM-yyyy");
-    setSelectedDate(clickedDate);
-    const filtered = allClasses.filter((cls) => cls.date === clickedDate);
+  const handleDateSelect = (info) => {
+    const clicked = format(new Date(info.start || info), "dd-MM-yyyy");
+
+    const filtered = allClasses.filter((cls) => {
+      return normalizeDate(cls.date) === clicked;
+    });
+
+    setSelectedDate(clicked);
     setClassesOnDate(filtered);
   };
 
@@ -106,12 +125,13 @@ const Home = () => {
               style={{ height: 500 }}
               selectable
               onSelectSlot={handleDateSelect}
+              onSelectEvent={handleDateSelect}
               popup
             />
           </div>
         </div>
 
-        {/* Right Column: Classes for selected date */}
+        {/* Right Column: Class Details */}
         <div className="col-md-5">
           <h4 className="mb-3 text-success fw-bold">
             Classes on {selectedDate}
