@@ -4,6 +4,7 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { format } from "date-fns";
+import { Clock, GeoAlt, Person, CalendarEvent } from "react-bootstrap-icons";
 
 const localizer = momentLocalizer(moment);
 
@@ -197,7 +198,17 @@ const Home = () => {
 
           {/* Live Now */}
           <div className="mb-4">
-            <h5 className="text-danger">Live Now</h5>
+            {/* Header with animated GIF and gradient title */}
+            <div className="d-flex align-items-center mb-3">
+              <img
+                src="/live-now.gif"
+                alt="Live Now"
+                style={{ height: "3.5rem" }}
+                className="me-2"
+              />
+            </div>
+
+            {/* No Live Classes */}
             {liveClasses.length === 0 ? (
               <div className="card shadow-sm bg-light">
                 <div className="card-body text-center text-muted">
@@ -205,31 +216,78 @@ const Home = () => {
                 </div>
               </div>
             ) : (
-              liveClasses.map((cls, idx) => (
-                <div key={idx} className="card border-danger shadow-sm">
-                  <div className="card-body">
-                    <h5 className="card-title text-primary">{cls.subject}</h5>
-                    <p className="card-text mb-1">
-                      <strong>Time:</strong> {cls.time}
-                    </p>
-                    <p className="card-text mb-1">
-                      <strong>Room:</strong> {cls.room}
-                    </p>
-                    <p className="card-text mb-1">
-                      <strong>Faculty:</strong> {cls.faculty}
-                    </p>
-                    <p className="card-text mb-0">
-                      <strong>Days:</strong> {cls.days}
-                    </p>
+              <div className="row g-3">
+                {liveClasses.map((cls, idx) => (
+                  <div key={idx} className="col-12">
+                    <div className="card shadow-sm border-start border-5 border-danger live-class-card">
+                      <div className="card-body">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <h5 className="card-title text-primary fw-bold mb-0">
+                            {cls.subject}
+                          </h5>
+                          <span className="badge bg-danger">Live</span>
+                        </div>
+
+                        <div className="row text-muted">
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <Clock className="me-2 text-primary fs-5" />
+                            <div>
+                              <div className="fw-semibold">Time</div>
+                              <div>{cls.time}</div>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <GeoAlt className="me-2 text-danger fs-5" />
+                            <div>
+                              <div className="fw-semibold">Room</div>
+                              <div>{cls.room}</div>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <Person className="me-2 text-success fs-5" />
+                            <div>
+                              <div className="fw-semibold">Faculty</div>
+                              <div>{cls.faculty}</div>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <CalendarEvent className="me-2 text-info fs-5" />
+                            <div>
+                              <div className="fw-semibold">Days</div>
+                              <div>{cls.days}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
 
           {/* Upcoming Classes */}
-          <div>
-            <h5 className="text-info">Upcoming Classes</h5>
+          <div className="mb-4">
+            {/* Header */}
+            <div className="d-flex align-items-center mb-3">
+              <img
+                src="/upcoming.gif"
+                alt="Upcoming"
+                style={{ height: "3.5rem" }}
+                className="me-2"
+              />
+              <h4
+                className="fw-bold text-success m-0"
+                style={{ fontSize: "1.5rem" }}
+              >
+                Upcoming Classes
+              </h4>
+            </div>
+
+            {/* No Upcoming Classes */}
             {upcomingClasses.length === 0 ? (
               <div className="card shadow-sm bg-light">
                 <div className="card-body text-center text-muted">
@@ -237,25 +295,56 @@ const Home = () => {
                 </div>
               </div>
             ) : (
-              upcomingClasses.map((cls, idx) => (
-                <div key={idx} className="card shadow-sm">
-                  <div className="card-body">
-                    <h5 className="card-title text-primary">{cls.subject}</h5>
-                    <p className="card-text mb-1">
-                      <strong>Time:</strong> {cls.time}
-                    </p>
-                    <p className="card-text mb-1">
-                      <strong>Room:</strong> {cls.room}
-                    </p>
-                    <p className="card-text mb-1">
-                      <strong>Faculty:</strong> {cls.faculty}
-                    </p>
-                    <p className="card-text mb-0">
-                      <strong>Days:</strong> {cls.days}
-                    </p>
+              <div className="row g-3">
+                {upcomingClasses.map((cls, idx) => (
+                  <div key={idx} className="col-12">
+                    <div className="card shadow-sm border-start border-5 border-success upcoming-class-card">
+                      <div className="card-body">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <h5 className="card-title text-success fw-bold mb-0">
+                            {cls.subject}
+                          </h5>
+                          <span className="badge bg-success">Upcoming</span>
+                        </div>
+
+                        <div className="row text-muted">
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <Clock className="me-2 text-primary fs-5" />
+                            <div>
+                              <div className="fw-semibold">Time</div>
+                              <div>{cls.time}</div>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <GeoAlt className="me-2 text-danger fs-5" />
+                            <div>
+                              <div className="fw-semibold">Room</div>
+                              <div>{cls.room}</div>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <Person className="me-2 text-success fs-5" />
+                            <div>
+                              <div className="fw-semibold">Faculty</div>
+                              <div>{cls.faculty}</div>
+                            </div>
+                          </div>
+
+                          <div className="col-sm-6 mb-3 d-flex align-items-start">
+                            <CalendarEvent className="me-2 text-info fs-5" />
+                            <div>
+                              <div className="fw-semibold">Days</div>
+                              <div>{cls.days}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </div>
