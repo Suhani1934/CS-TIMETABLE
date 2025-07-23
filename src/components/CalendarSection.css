@@ -1,0 +1,29 @@
+
+.react-calendar {
+  width: 100%;
+  border: none;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+
+.react-calendar__tile--now {
+  background: #e0f3ff;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.highlight-date {
+  background: #007bff !important;
+  color: white !important;
+  border-radius: 8px;
+}
+
+.react-calendar__tile {
+  padding: 10px 6px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.react-calendar__tile:hover {
+  background: #f0f8ff;
+}
