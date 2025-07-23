@@ -1,0 +1,19 @@
+.bg-live {
+  background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+  border-left: 5px solid #e60000;
+  transition: 0.3s;
+}
+.bg-live:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 10px rgba(230, 0, 0, 0.2);
+}
+
+.bg-upcoming {
+  background: linear-gradient(135deg, #e6ffe6, #ccffcc);
+  border-left: 5px solid #00cc00;
+  transition: 0.3s;
+}
+.bg-upcoming:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 10px rgba(0, 204, 0, 0.2);
+}

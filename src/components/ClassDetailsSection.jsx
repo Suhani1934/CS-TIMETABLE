@@ -1,7 +1,9 @@
 import { Clock, User, Book, MapPin, CalendarDays } from "lucide-react";
+import "./ClassDetailsSection.css";
 
-const ClassInfo = ({ cls }) => (
-  <div className="card mb-3 shadow-sm border-0">
+// Class card component
+const ClassInfo = ({ cls, type }) => (
+  <div className={`card mb-3 shadow-sm border-0 ${type === "Live" ? "bg-live" : "bg-upcoming"}`}>
     <div className="card-body p-3">
       <h6 className="card-title text-primary fw-semibold d-flex align-items-center mb-2">
         <Book size={16} className="me-2" />
@@ -27,6 +29,7 @@ const ClassInfo = ({ cls }) => (
   </div>
 );
 
+// Wrapper for course section
 const CourseSection = ({ title, classes, type }) => (
   <div className="col-lg-4 mb-4">
     <div className="bg-white rounded-4 shadow-sm p-3 h-100 border border-light-subtle">
@@ -38,38 +41,35 @@ const CourseSection = ({ title, classes, type }) => (
         {title}
       </h5>
       {classes.length > 0 ? (
-        classes.map((cls, idx) => <ClassInfo key={idx} cls={cls} />)
+        classes.map((cls, idx) => <ClassInfo key={idx} cls={cls} type={type} />)
       ) : (
-        <div className="text-center text-muted">No {type.toLowerCase()} classes</div>
+        <div className="text-center text-muted">
+          No {type.toLowerCase()} classes
+        </div>
       )}
     </div>
   </div>
 );
 
-const formatDate = (date) =>
-  new Date(date).toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
-const ClassDetailsSection = ({ selectedDate, liveClasses, upcomingClasses }) => {
+const ClassDetailsSection = ({
+  selectedDate,
+  liveClasses,
+  upcomingClasses,
+}) => {
   const courses = ["BCA", "BIT", "MCA"];
 
   return (
     <div className="row">
-      <div className="col-12 mb-3">
-        <h4 className="fw-bold text-primary">Classes on {formatDate(selectedDate)}</h4>
-      </div>
-
+      {/* Live Classes Section */}
       <div className="d-flex align-items-center mb-3">
         <img
           src="/live-now.gif"
           alt="Live"
           style={{ height: "70px", marginRight: "10px" }}
         />
+        <h3 className="fw-bold text-danger mb-0">Live Classes</h3>
       </div>
+
       <div className="row mb-5">
         {courses.map((course) => (
           <CourseSection
@@ -81,14 +81,16 @@ const ClassDetailsSection = ({ selectedDate, liveClasses, upcomingClasses }) => 
         ))}
       </div>
 
+      {/* Upcoming Classes Section */}
       <div className="d-flex align-items-center mb-3">
         <img
           src="/upcoming.gif"
           alt="Upcoming Classes"
           style={{ height: "70px", marginRight: "10px" }}
         />
-      <h3 className="fw-bold text-success mb-3">Upcoming Classes</h3>
+        <h3 className="fw-bold text-success mb-0">Upcoming Classes</h3>
       </div>
+
       <div className="row">
         {courses.map((course) => (
           <CourseSection

@@ -1,5 +1,6 @@
+// src/pages/Home.jsx
 import { useState, useEffect } from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import CalendarSection from "../components/CalendarSection";
 import ClassDetailsSection from "../components/ClassDetailsSection";
 
@@ -13,10 +14,18 @@ const isClassLive = (classTime, date) => {
   const [startStr, endStr] = classTime.split(" - ");
   const selectedDateStr = moment(date).format("YYYY-MM-DD");
 
-  const start = moment(`${selectedDateStr} ${startStr}`, "YYYY-MM-DD hh:mm A");
-  const end = moment(`${selectedDateStr} ${endStr}`, "YYYY-MM-DD hh:mm A");
+  const start = moment.tz(
+    `${selectedDateStr} ${startStr}`,
+    "YYYY-MM-DD hh:mm A",
+    "Asia/Kolkata"
+  );
+  const end = moment.tz(
+    `${selectedDateStr} ${endStr}`,
+    "YYYY-MM-DD hh:mm A",
+    "Asia/Kolkata"
+  );
+  const now = moment.tz("Asia/Kolkata");
 
-  const now = moment();
   return now.isBetween(start, end);
 };
 
@@ -35,8 +44,10 @@ const getExpandedDays = (daysStr) => {
         if (startIndex <= endIndex) {
           result.push(...weekdays.slice(startIndex, endIndex + 1));
         } else {
-          // for ranges like "Fri-Mon"
-          result.push(...weekdays.slice(startIndex), ...weekdays.slice(0, endIndex + 1));
+          result.push(
+            ...weekdays.slice(startIndex),
+            ...weekdays.slice(0, endIndex + 1)
+          );
         }
       }
     } else {
@@ -54,7 +65,6 @@ const Home = () => {
   const [allClasses, setAllClasses] = useState([]);
   const [liveClasses, setLiveClasses] = useState({});
   const [upcomingClasses, setUpcomingClasses] = useState({});
-
   const courses = ["BCA", "BIT", "MCA"];
 
   useEffect(() => {
@@ -62,7 +72,6 @@ const Home = () => {
       const SHEET_ID = import.meta.env.VITE_SHEET_ID;
       const API_KEY = import.meta.env.VITE_GOOGLE_SHEET_API_KEY;
       const SHEET_NAME = import.meta.env.VITE_SHEET_NAME;
-
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
 
       try {
@@ -73,7 +82,6 @@ const Home = () => {
 
         const headers = data.values[0];
         const rows = data.values.slice(1);
-
         const jsonData = rows.map((row) => {
           const entry = {};
           headers.forEach((header, index) => {
@@ -109,16 +117,33 @@ const Home = () => {
         );
       });
 
+      // Live classes
       live[course] = courseClasses.filter((cls) => isClassLive(cls.time, date));
 
-      upcoming[course] = courseClasses.filter((cls) => {
-        if (isClassLive(cls.time, date)) return false;
-
-        const [startStr] = cls.time.split(" - ");
-        const start = moment(`${selectedDateStr} ${startStr}`, "YYYY-MM-DD hh:mm A");
-
-        return start.isAfter(now);
-      });
+      // Upcoming classes sorted by start time
+      upcoming[course] = courseClasses
+        .filter((cls) => {
+          if (isClassLive(cls.time, date)) return false;
+          const [startStr] = cls.time.split(" - ");
+          const start = moment(
+            `${selectedDateStr} ${startStr}`,
+            "YYYY-MM-DD hh:mm A"
+          );
+          return start.isAfter(now);
+        })
+        .sort((a, b) => {
+          const [startA] = a.time.split(" - ");
+          const [startB] = b.time.split(" - ");
+          const timeA = moment(
+            `${selectedDateStr} ${startA}`,
+            "YYYY-MM-DD hh:mm A"
+          );
+          const timeB = moment(
+            `${selectedDateStr} ${startB}`,
+            "YYYY-MM-DD hh:mm A"
+          );
+          return timeA - timeB;
+        });
     });
 
     setLiveClasses(live);
@@ -131,34 +156,41 @@ const Home = () => {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="row">
-        <div >
-          <CalendarSection
-            selectedDate={selectedDate}
-            onDateChange={handleDateSelect}
-          />
+    <div className="container py-4">
+      {/* Calendar Section */}
+      <div className="mb-5">
+        <div className="card shadow-sm border-0">
+          <div className="card-body">
+            <h5 className="card-title text-primary fw-bold mb-3">
+              📅 Select Date
+            </h5>
+            <CalendarSection
+              selectedDate={selectedDate}
+              onDateChange={handleDateSelect}
+            />
+          </div>
         </div>
-        <div >
-          <ClassDetailsSection
-            selectedDate={selectedDate}
-            liveClasses={liveClasses}
-            upcomingClasses={upcomingClasses}
-          />
+      </div>
+
+      {/* Classes Section */}
+      <div className="mb-3">
+        <div className="card shadow-sm border-0">
+          <div className="card-body">
+            <h5 className="card-title text-success fw-bold mb-4">
+              📚 Classes on{" "}
+              <span className="text-dark">
+                {moment(selectedDate).format("dddd, MMMM D, YYYY")}
+              </span>
+            </h5>
+            <ClassDetailsSection
+              selectedDate={selectedDate}
+              liveClasses={liveClasses}
+              upcomingClasses={upcomingClasses}
+            />
+          </div>
         </div>
       </div>
     </div>
-
-    // <Container>
-    //   {/* Stack the columns on mobile by making one full-width and the other half-width */}
-    //   <Row>
-    //     <Col xs={12} md={8}>
-    //       xs=12 md=8
-    //     </Col>
-    //     <Col xs={6} md={4}>
-    //       xs=6 md=4
-    //     </Col>
-    //   </Row>
   );
 };
 

@@ -1,21 +1,25 @@
+// src/components/CalendarSection.jsx
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import "./CalendarSection.css"; // Optional: Your custom overrides
+import { Card } from "react-bootstrap";
 
 const CalendarSection = ({ selectedDate, onDateChange }) => {
   return (
-    <div className="mb-4">
-      <h5 className="mb-3 text-primary fw-bold">Select Date</h5>
-      <div className="border rounded shadow-sm p-2 bg-white">
-        <Calendar
-          onChange={onDateChange}
-          value={selectedDate}
-          className="w-100"
-          tileClassName={({ date }) =>
-            date.toDateString() === selectedDate.toDateString() ? "bg-primary text-white" : ""
-          }
-        />
-      </div>
-    </div>
+    <Card className="shadow-sm p-3 mb-4 bg-white rounded">
+      <Card.Body>
+        <div className="d-flex justify-content-center">
+          <Calendar
+            onChange={onDateChange}
+            value={selectedDate}
+            className="border-0"
+            tileClassName={({ date }) =>
+              date.toDateString() === selectedDate.toDateString() ? "bg-primary text-white rounded" : ""
+            }
+          />
+        </div>
+      </Card.Body>
+    </Card>
   );
 };
 
