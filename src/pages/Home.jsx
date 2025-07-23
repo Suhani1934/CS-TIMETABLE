@@ -133,13 +133,13 @@ const Home = () => {
   return (
     <div className="container mt-4">
       <div className="row">
-        <div className="col-md-3">
+        <div >
           <CalendarSection
             selectedDate={selectedDate}
             onDateChange={handleDateSelect}
           />
         </div>
-        <div className="col-md-9">
+        <div >
           <ClassDetailsSection
             selectedDate={selectedDate}
             liveClasses={liveClasses}
@@ -148,6 +148,17 @@ const Home = () => {
         </div>
       </div>
     </div>
+
+    // <Container>
+    //   {/* Stack the columns on mobile by making one full-width and the other half-width */}
+    //   <Row>
+    //     <Col xs={12} md={8}>
+    //       xs=12 md=8
+    //     </Col>
+    //     <Col xs={6} md={4}>
+    //       xs=6 md=4
+    //     </Col>
+    //   </Row>
   );
 };
 
