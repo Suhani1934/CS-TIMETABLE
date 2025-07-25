@@ -1,9 +1,13 @@
-import { Clock, User, Book, MapPin, CalendarDays } from "lucide-react";
+import { Clock, User, Book, MapPin, CalendarDays, School   } from "lucide-react";
 import "./ClassDetailsSection.css";
 
 // Class card component
 const ClassInfo = ({ cls, type }) => (
-  <div className={`card mb-3 shadow-sm border-0 ${type === "Live" ? "bg-live" : "bg-upcoming"}`}>
+  <div
+    className={`card mb-3 shadow-sm border-0 ${
+      type === "Live" ? "bg-live" : "bg-upcoming"
+    }`}
+  >
     <div className="card-body p-3">
       <h6 className="card-title text-primary fw-semibold d-flex align-items-center mb-2">
         <Book size={16} className="me-2" />
@@ -18,12 +22,16 @@ const ClassInfo = ({ cls, type }) => (
         <span>{cls.time}</span>
       </p>
       <p className="card-text mb-2 d-flex align-items-center">
-        <MapPin size={16} className="me-2 text-warning" />
+        <MapPin size={16} className="me-2 text-danger" />
         <span>{cls.room}</span>
       </p>
-      <p className="card-text d-flex align-items-center">
-        <CalendarDays size={16} className="me-2 text-dark" />
+      <p className="card-text mb-2 d-flex align-items-center">
+        <CalendarDays size={16} className="me-2 text-warning" />
         <span>{cls.days}</span>
+      </p>
+      <p className="card-text d-flex align-items-center">
+        <School  size={16} className="me-2 text-dark" />
+        <span>{cls.semester}</span>
       </p>
     </div>
   </div>
@@ -51,11 +59,7 @@ const CourseSection = ({ title, classes, type }) => (
   </div>
 );
 
-const ClassDetailsSection = ({
-  selectedDate,
-  liveClasses,
-  upcomingClasses,
-}) => {
+const ClassDetailsSection = ({ liveClasses, upcomingClasses }) => {
   const courses = ["BCA", "BIT", "MCA"];
 
   return (
