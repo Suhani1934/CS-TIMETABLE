@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import { useState, useEffect } from "react";
 import moment from "moment-timezone";
 import CalendarSection from "../components/CalendarSection";
@@ -67,37 +66,45 @@ const Home = () => {
   const [upcomingClasses, setUpcomingClasses] = useState({});
   const courses = ["BCA", "BIT", "MCA"];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const SHEET_ID = import.meta.env.VITE_SHEET_ID;
-      const API_KEY = import.meta.env.VITE_GOOGLE_SHEET_API_KEY;
-      const SHEET_NAME = import.meta.env.VITE_SHEET_NAME;
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+  // Reusable data fetching and filtering
+  const fetchAndFilterData = async (date = selectedDate) => {
+    const SHEET_ID = import.meta.env.VITE_SHEET_ID;
+    const API_KEY = import.meta.env.VITE_GOOGLE_SHEET_API_KEY;
+    const SHEET_NAME = import.meta.env.VITE_SHEET_NAME;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
 
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
 
-        if (!data.values || data.values.length === 0) return;
+      if (!data.values || data.values.length === 0) return;
 
-        const headers = data.values[0];
-        const rows = data.values.slice(1);
-        const jsonData = rows.map((row) => {
-          const entry = {};
-          headers.forEach((header, index) => {
-            entry[header.toLowerCase()] = row[index] || "";
-          });
-          return entry;
+      const headers = data.values[0];
+      const rows = data.values.slice(1);
+      const jsonData = rows.map((row) => {
+        const entry = {};
+        headers.forEach((header, index) => {
+          entry[header.toLowerCase()] = row[index] || "";
         });
+        return entry;
+      });
 
-        setAllClasses(jsonData);
-        filterClasses(jsonData, selectedDate);
-      } catch (err) {
-        console.error("Error loading data", err);
-      }
-    };
+      setAllClasses(jsonData);
+      filterClasses(jsonData, date);
+    } catch (err) {
+      console.error("Error loading data", err);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchAndFilterData();
+
+    const interval = setInterval(() => {
+      console.log("Refreshing class data...");
+      fetchAndFilterData();
+    }, 2 * 60 * 1000); // 2 minutes
+
+    return () => clearInterval(interval); // cleanup
   }, []);
 
   const filterClasses = (data, date) => {
@@ -117,10 +124,8 @@ const Home = () => {
         );
       });
 
-      // Live classes
       live[course] = courseClasses.filter((cls) => isClassLive(cls.time, date));
 
-      // Upcoming classes sorted by start time
       upcoming[course] = courseClasses
         .filter((cls) => {
           if (isClassLive(cls.time, date)) return false;
