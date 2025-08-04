@@ -99,6 +99,7 @@ const Home = () => {
   useEffect(() => {
     fetchAndFilterData();
 
+    // Auto refresh in 2 minutes
     const interval = setInterval(() => {
       console.log("Refreshing class data...");
       fetchAndFilterData();
