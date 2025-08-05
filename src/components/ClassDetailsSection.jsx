@@ -1,4 +1,4 @@
-import { Clock, User, Book, MapPin, CalendarDays, School   } from "lucide-react";
+import { Clock, User, Book, MapPin, CalendarDays, School } from "lucide-react";
 import "./ClassDetailsSection.css";
 
 // Class card component
@@ -30,14 +30,13 @@ const ClassInfo = ({ cls, type }) => (
         <span>{cls.days}</span>
       </p>
       <p className="card-text d-flex align-items-center">
-        <School  size={16} className="me-2 text-dark" />
+        <School size={16} className="me-2 text-dark" />
         <span>{cls.semester}</span>
       </p>
     </div>
   </div>
 );
 
-// Wrapper for course section
 const CourseSection = ({ title, classes, type }) => (
   <div className="col-lg-4 mb-4">
     <div className="bg-white rounded-4 shadow-sm p-3 h-100 border border-light-subtle">
@@ -59,8 +58,21 @@ const CourseSection = ({ title, classes, type }) => (
   </div>
 );
 
-const ClassDetailsSection = ({ liveClasses, upcomingClasses }) => {
+const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
   const courses = ["BCA", "BIT", "MCA"];
+
+  //  Function to filter by search term
+  const matchesSearch = (cls) => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    return (
+      cls.subject?.toLowerCase().includes(term) ||
+      cls.faculty?.toLowerCase().includes(term) ||
+      cls.room?.toLowerCase().includes(term) ||
+      cls.days?.toLowerCase().includes(term) ||
+      cls.semester?.toLowerCase().includes(term)
+    );
+  };
 
   return (
     <div className="row">
@@ -80,7 +92,9 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses }) => {
             key={course}
             title={course}
             type="Live"
-            classes={liveClasses[course] || []}
+            classes={
+              (liveClasses[course] || []).filter((cls) => matchesSearch(cls))
+            }
           />
         ))}
       </div>
@@ -88,9 +102,9 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses }) => {
       {/* Upcoming Classes Section */}
       <div className="d-flex align-items-center mb-3">
         <img
-          src="/upcoming.gif"
+          src="/next.gif"
           alt="Upcoming Classes"
-          style={{ height: "70px", marginRight: "10px" }}
+          style={{ height: "90px", marginRight: "10px" }}
         />
         <h3 className="fw-bold text-success mb-0">Upcoming Classes</h3>
       </div>
@@ -101,7 +115,9 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses }) => {
             key={course}
             title={course}
             type="Upcoming"
-            classes={upcomingClasses[course] || []}
+            classes={
+              (upcomingClasses[course] || []).filter((cls) => matchesSearch(cls))
+            }
           />
         ))}
       </div>

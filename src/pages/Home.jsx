@@ -64,9 +64,9 @@ const Home = () => {
   const [allClasses, setAllClasses] = useState([]);
   const [liveClasses, setLiveClasses] = useState({});
   const [upcomingClasses, setUpcomingClasses] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
   const courses = ["BCA", "BIT", "MCA"];
 
-  // Reusable data fetching and filtering
   const fetchAndFilterData = async (date = selectedDate) => {
     const SHEET_ID = import.meta.env.VITE_SHEET_ID;
     const API_KEY = import.meta.env.VITE_GOOGLE_SHEET_API_KEY;
@@ -99,20 +99,18 @@ const Home = () => {
   useEffect(() => {
     fetchAndFilterData();
 
-    // Auto refresh in 2 minutes
     const interval = setInterval(() => {
       console.log("Refreshing class data...");
       fetchAndFilterData();
     }, 2 * 60 * 1000); // 2 minutes
 
-    return () => clearInterval(interval); // cleanup
+    return () => clearInterval(interval);
   }, []);
 
   const filterClasses = (data, date) => {
     const weekday = getWeekdayAbbreviation(date);
     const live = {};
     const upcoming = {};
-
     const selectedDateStr = moment(date).format("YYYY-MM-DD");
     const now = moment();
 
@@ -163,36 +161,63 @@ const Home = () => {
 
   return (
     <div className="container py-4">
-      {/* Calendar Section */}
-      <div className="mb-5">
-        <div className="card shadow-sm border-0">
-          <div className="card-body">
-            <h5 className="card-title text-primary fw-bold mb-3">
-              📅 Select Date
-            </h5>
-            <CalendarSection
-              selectedDate={selectedDate}
-              onDateChange={handleDateSelect}
-            />
+      <div className="row">
+        {/* Left: Calendar Section */}
+        <div className="col-md-4 mb-4">
+          <div className="card shadow-sm border-0">
+            <div className="card-body">
+              <h5 className="card-title text-primary fw-bold mb-3">
+                📅 Select Date
+              </h5>
+              <CalendarSection
+                selectedDate={selectedDate}
+                onDateChange={handleDateSelect}
+              />
+            </div>
+          </div>
+
+          {/* Download Buttons */}
+          <div className="mt-4 text-center">
+            <button className="btn btn-primary w-100 mb-2">
+              Download Timetable (Faculty-wise)
+            </button>
+            <button className="btn btn-success w-100 mb-2">
+              Download Timetable (Class-wise)
+            </button>
+            <button className="btn btn-warning w-100">
+              Download Timetable (Room-wise)
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Classes Section */}
-      <div className="mb-3">
-        <div className="card shadow-sm border-0">
-          <div className="card-body">
-            <h5 className="card-title text-success fw-bold mb-4">
-              📚 Classes on{" "}
-              <span className="text-dark">
-                {moment(selectedDate).format("dddd, MMMM D, YYYY")}
-              </span>
-            </h5>
-            <ClassDetailsSection
-              selectedDate={selectedDate}
-              liveClasses={liveClasses}
-              upcomingClasses={upcomingClasses}
-            />
+        {/* Right: Classes Section */}
+        <div className="col-md-8">
+          <div className="card shadow-sm border-0 mb-4">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h5 className="card-title text-success fw-bold mb-0">
+                  📚 Classes on{" "}
+                  <span className="text-dark">
+                    {moment(selectedDate).format("dddd, MMMM D, YYYY")}
+                  </span>
+                </h5>
+                {/* Search Input */}
+                <input
+                  type="text"
+                  className="form-control w-50"
+                  placeholder="Search by faculty, subject..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              <ClassDetailsSection
+                selectedDate={selectedDate}
+                liveClasses={liveClasses}
+                upcomingClasses={upcomingClasses}
+                searchTerm={searchTerm}
+              />
+            </div>
           </div>
         </div>
       </div>
