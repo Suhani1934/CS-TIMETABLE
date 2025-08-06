@@ -1,41 +1,66 @@
-import { Clock, User, Book, MapPin, CalendarDays, School } from "lucide-react";
+import {
+  Clock,
+  User,
+  Book,
+  MapPin,
+  CalendarDays,
+  School,
+} from "lucide-react";
 import "./ClassDetailsSection.css";
 
+// Color Mapping (course + semester)
+const semesterColors = {
+  "BIT I sem": "#c3ebf8e3",    
+  "BIT III sem": "#87CEFA",
+  "BIT V sem": "#8bc0f1da",    
+
+  "BCA I sem": "#aaf1aad8",     
+  "BCA III sem": "#b4f5b4dc",  
+  "BCA V sem": "#9deb95ff",    
+
+  "MCA I sem": "#FFFACD",     
+  "MCA III sem": "#f5f5b2ff",   
+};
+
 // Class card component
-const ClassInfo = ({ cls, type }) => (
-  <div
-    className={`card mb-3 shadow-sm border-0 ${
-      type === "Live" ? "bg-live" : "bg-upcoming"
-    }`}
-  >
-    <div className="card-body p-3">
-      <h6 className="card-title text-primary fw-semibold d-flex align-items-center mb-2">
-        <Book size={16} className="me-2" />
-        {cls.subject}
-      </h6>
-      <p className="card-text mb-2 d-flex align-items-center">
-        <User size={16} className="me-2 text-muted" />
-        <span>{cls.faculty}</span>
-      </p>
-      <p className="card-text mb-2 d-flex align-items-center">
-        <Clock size={16} className="me-2 text-success" />
-        <span>{cls.time}</span>
-      </p>
-      <p className="card-text mb-2 d-flex align-items-center">
-        <MapPin size={16} className="me-2 text-danger" />
-        <span>{cls.room}</span>
-      </p>
-      <p className="card-text mb-2 d-flex align-items-center">
-        <CalendarDays size={16} className="me-2 text-warning" />
-        <span>{cls.days}</span>
-      </p>
-      <p className="card-text d-flex align-items-center">
-        <School size={16} className="me-2 text-dark" />
-        <span>{cls.semester}</span>
-      </p>
+const ClassInfo = ({ cls, type }) => {
+  const key = `${cls.course} ${cls.semester}`;
+  const bgColor = semesterColors[key] || (type === "Live" ? "#ffe6e6" : "#e6f2ff");
+
+  return (
+    <div
+      className="card mb-3 shadow-sm border-0"
+      style={{ backgroundColor: bgColor }}
+    >
+      <div className="card-body p-3">
+        <h6 className="card-title fw-semibold d-flex align-items-center mb-2">
+          <Book size={16} className="me-2" />
+          {cls.subject}
+        </h6>
+        <p className="card-text mb-2 d-flex align-items-center">
+          <User size={16} className="me-2 text-dark" />
+          <span>{cls.faculty}</span>
+        </p>
+        <p className="card-text mb-2 d-flex align-items-center">
+          <Clock size={16} className="me-2 text-dark" />
+          <span>{cls.time}</span>
+        </p>
+        <p className="card-text mb-2 d-flex align-items-center">
+          <MapPin size={16} className="me-2 text-dark" />
+          <span>{cls.room}</span>
+        </p>
+        <p className="card-text mb-2 d-flex align-items-center">
+          <CalendarDays size={16} className="me-2 text-dark" />
+          <span>{cls.days}</span>
+        </p>
+        <p className="card-text d-flex align-items-center">
+          <School size={16} className="me-2 text-dark" />
+          <span>{cls.semester}</span>
+        </p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const CourseSection = ({ title, classes, type }) => (
   <div className="col-lg-4 mb-4">
@@ -61,7 +86,7 @@ const CourseSection = ({ title, classes, type }) => (
 const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
   const courses = ["BCA", "BIT", "MCA"];
 
-  //  Function to filter by search term
+  // 🔍 Function to filter by search term
   const matchesSearch = (cls) => {
     if (!searchTerm) return true;
     const term = searchTerm.toLowerCase();
@@ -76,7 +101,7 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
 
   return (
     <div className="row">
-      {/* Live Classes Section */}
+      {/* 🔴 Live Classes Section */}
       <div className="d-flex align-items-center mb-3">
         <img
           src="/live-now.gif"
@@ -92,14 +117,14 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
             key={course}
             title={course}
             type="Live"
-            classes={
-              (liveClasses[course] || []).filter((cls) => matchesSearch(cls))
-            }
+            classes={(liveClasses[course] || []).filter((cls) =>
+              matchesSearch(cls)
+            )}
           />
         ))}
       </div>
 
-      {/* Upcoming Classes Section */}
+      {/* 🟢 Upcoming Classes Section */}
       <div className="d-flex align-items-center mb-3">
         <img
           src="/next.gif"
@@ -115,9 +140,9 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
             key={course}
             title={course}
             type="Upcoming"
-            classes={
-              (upcomingClasses[course] || []).filter((cls) => matchesSearch(cls))
-            }
+            classes={(upcomingClasses[course] || []).filter((cls) =>
+              matchesSearch(cls)
+            )}
           />
         ))}
       </div>
