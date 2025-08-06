@@ -159,6 +159,22 @@ const Home = () => {
     filterClasses(allClasses, date);
   };
 
+  const timetableLinks = {
+    faculty:
+      "https://drive.google.com/file/d/1t1EHSI92XYfFoXhuQ-oORpCTs1v4HBb0/view?usp=sharing",
+    course:
+      "https://drive.google.com/file/d/1J4Sl4OrYY1fF-wGyFeKNrlFIm6RoORiv/view?usp=sharing",
+    room: "https://drive.google.com/file/d/1WkmezzpsetGi4fySQulAMTLOUKGOL3jC/view?usp=drive_link",
+    freeslots:"https://drive.google.com/file/d/1s7oA2K6layM7rQDMoZT1J1hhIaS-Rj7V/view?usp=sharing",
+  };
+
+  function handleDownload(option) {
+    const link = timetableLinks[option];
+    if (link) {
+      window.open(link, "_blank");
+    }
+  }
+
   return (
     <div className="container py-4">
       <div className="row">
@@ -173,20 +189,8 @@ const Home = () => {
                 selectedDate={selectedDate}
                 onDateChange={handleDateSelect}
               />
+              
             </div>
-          </div>
-
-          {/* Download Buttons */}
-          <div className="mt-4 text-center">
-            <button className="btn btn-primary w-100 mb-2">
-              Download Timetable (Faculty-wise)
-            </button>
-            <button className="btn btn-success w-100 mb-2">
-              Download Timetable (Class-wise)
-            </button>
-            <button className="btn btn-warning w-100">
-              Download Timetable (Room-wise)
-            </button>
           </div>
         </div>
 
@@ -201,14 +205,36 @@ const Home = () => {
                     {moment(selectedDate).format("dddd, MMMM D, YYYY")}
                   </span>
                 </h5>
-                {/* Search Input */}
-                <input
-                  type="text"
-                  className="form-control w-50"
-                  placeholder="Search by faculty, subject..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+
+                {/* Search and Download Dropdown */}
+                <div className="d-flex gap-2 w-100 justify-content-end">
+                  <input
+                    type="text"
+                    className="form-control w-50"
+                    placeholder="Search by faculty, subject..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+
+                  <div className="mb-4">
+                    <label className="form-label fw-bold">
+                      📥 Download Timetable
+                    </label>
+                    <select
+                      className="form-select w-auto d-inline-block me-2"
+                      onChange={(e) => handleDownload(e.target.value)}
+                      defaultValue=""
+                    >
+                      <option value="" disabled>
+                        Select Option
+                      </option>
+                      <option value="faculty">Faculty-wise</option>
+                      <option value="course">Course-wise</option>
+                      <option value="room">Room-wise</option>
+                      <option value="freeslots">View Free Slots</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <ClassDetailsSection
