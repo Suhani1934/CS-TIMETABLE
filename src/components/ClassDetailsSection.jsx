@@ -34,7 +34,7 @@ const ClassInfo = ({ cls, type }) => {
     >
       <div className="card-body p-3">
         <h6 className="card-title fw-semibold d-flex align-items-center mb-2">
-          <Book size={16} className="me-2" />
+          <Book size={16} className="me-2 text-dark" />
           {cls.subject}
         </h6>
         <p className="card-text mb-2 d-flex align-items-center">

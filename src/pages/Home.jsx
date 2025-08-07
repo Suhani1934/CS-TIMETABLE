@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import moment from "moment-timezone";
 import CalendarSection from "../components/CalendarSection";
 import ClassDetailsSection from "../components/ClassDetailsSection";
+import TimetableSection from "../components/TimetableSection";
 
 const now = moment.tz("Asia/Kolkata");
 
@@ -205,7 +206,7 @@ const Home = () => {
   const isPrayerTime = now.isBetween(prayerStart, prayerEnd);
 
   return (
-    <div className="container py-4">
+    <div className="container-fluid py-4">
       <div className="row">
         {/* Left: Calendar Section */}
         <div className="col-md-4 mb-4">
@@ -220,6 +221,7 @@ const Home = () => {
               />
             </div>
           </div>
+          <TimetableSection/>
         </div>
 
         {/* Right: Classes Section */}

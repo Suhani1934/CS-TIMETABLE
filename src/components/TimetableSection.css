@@ -1,0 +1,53 @@
+.lunch-time {
+  background-color: #ffeed0 !important;
+  font-weight: bold;
+  color: #c04f00;
+}
+
+.prayer-time {
+  background-color: #c6dbec !important;
+  font-weight: bold;
+  color: #004d99;
+}
+
+.free-slot {
+  font-weight: bold;
+  color: red !important;
+  animation: emojiPulse 1.2s infinite alternate;
+}
+
+.lunch-time::before {
+  content: "🍱 ";
+  /* animation: emojiBounce 1s infinite alternate; */
+  display: inline-block;
+}
+
+.prayer-time::before {
+  content: "🙏 ";
+  /* animation: emojiPulse 1.2s infinite ease-in-out; */
+  display: inline-block;
+}
+
+@keyframes emojiBounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes emojiPulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
