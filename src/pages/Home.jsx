@@ -165,7 +165,8 @@ const Home = () => {
     course:
       "https://drive.google.com/file/d/1J4Sl4OrYY1fF-wGyFeKNrlFIm6RoORiv/view?usp=sharing",
     room: "https://drive.google.com/file/d/1WkmezzpsetGi4fySQulAMTLOUKGOL3jC/view?usp=drive_link",
-    freeslots:"https://drive.google.com/file/d/1s7oA2K6layM7rQDMoZT1J1hhIaS-Rj7V/view?usp=sharing",
+    freeslots:
+      "https://drive.google.com/file/d/1s7oA2K6layM7rQDMoZT1J1hhIaS-Rj7V/view?usp=sharing",
   };
 
   function handleDownload(option) {
@@ -174,6 +175,36 @@ const Home = () => {
       window.open(link, "_blank");
     }
   }
+
+  // Define fixed time ranges in Asia/Kolkata timezone
+  const nowTime = moment.tz("Asia/Kolkata");
+
+  // Lunch Time: 10:05 AM - 11:30 AM
+  const lunchStart = moment.tz(
+    moment(selectedDate).format("YYYY-MM-DD") + " 10:05 AM",
+    "YYYY-MM-DD hh:mm A",
+    "Asia/Kolkata"
+  );
+  const lunchEnd = moment.tz(
+    moment(selectedDate).format("YYYY-MM-DD") + " 11:30 AM",
+    "YYYY-MM-DD hh:mm A",
+    "Asia/Kolkata"
+  );
+
+  // Prayer Time: 11:30 AM - 12:50 PM
+  const prayerStart = moment.tz(
+    moment(selectedDate).format("YYYY-MM-DD") + " 11:30 AM",
+    "YYYY-MM-DD hh:mm A",
+    "Asia/Kolkata"
+  );
+  const prayerEnd = moment.tz(
+    moment(selectedDate).format("YYYY-MM-DD") + " 12:50 PM",
+    "YYYY-MM-DD hh:mm A",
+    "Asia/Kolkata"
+  );
+
+  const isLunchTime = nowTime.isBetween(lunchStart, lunchEnd);
+  const isPrayerTime = nowTime.isBetween(prayerStart, prayerEnd);
 
   return (
     <div className="container py-4">
@@ -189,7 +220,6 @@ const Home = () => {
                 selectedDate={selectedDate}
                 onDateChange={handleDateSelect}
               />
-              
             </div>
           </div>
         </div>
@@ -237,12 +267,22 @@ const Home = () => {
                 </div>
               </div>
 
-              <ClassDetailsSection
-                selectedDate={selectedDate}
-                liveClasses={liveClasses}
-                upcomingClasses={upcomingClasses}
-                searchTerm={searchTerm}
-              />
+              {isLunchTime ? (
+                <div className="text-center p-5 bg-warning rounded-3">
+                  <h2 className="text-danger fw-bold">🍱 LUNCH TIME</h2>
+                </div>
+              ) : isPrayerTime ? (
+                <div className="text-center p-5 bg-info rounded-3">
+                  <h2 className="text-primary fw-bold">🙏 PRAYER TIME</h2>
+                </div>
+              ) : (
+                <ClassDetailsSection
+                  selectedDate={selectedDate}
+                  liveClasses={liveClasses}
+                  upcomingClasses={upcomingClasses}
+                  searchTerm={searchTerm}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -86,7 +86,7 @@ const CourseSection = ({ title, classes, type }) => (
 const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
   const courses = ["BCA", "BIT", "MCA"];
 
-  // 🔍 Function to filter by search term
+  // Function to filter by search term
   const matchesSearch = (cls) => {
     if (!searchTerm) return true;
     const term = searchTerm.toLowerCase();
@@ -101,7 +101,7 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
 
   return (
     <div className="row">
-      {/* 🔴 Live Classes Section */}
+      {/* Live Classes Section */}
       <div className="d-flex align-items-center mb-3">
         <img
           src="/live-now.gif"
@@ -124,7 +124,7 @@ const ClassDetailsSection = ({ liveClasses, upcomingClasses, searchTerm }) => {
         ))}
       </div>
 
-      {/* 🟢 Upcoming Classes Section */}
+      {/* Upcoming Classes Section */}
       <div className="d-flex align-items-center mb-3">
         <img
           src="/next.gif"
