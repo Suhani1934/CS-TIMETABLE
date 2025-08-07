@@ -3,6 +3,8 @@ import moment from "moment-timezone";
 import CalendarSection from "../components/CalendarSection";
 import ClassDetailsSection from "../components/ClassDetailsSection";
 
+const now = moment.tz("Asia/Kolkata");
+
 const getWeekdayAbbreviation = (date) => {
   const dayIndex = new Date(date).getDay();
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -24,8 +26,6 @@ const isClassLive = (classTime, date) => {
     "YYYY-MM-DD hh:mm A",
     "Asia/Kolkata"
   );
-  const now = moment.tz("Asia/Kolkata");
-
   return now.isBetween(start, end);
 };
 
@@ -113,7 +113,6 @@ const Home = () => {
     const live = {};
     const upcoming = {};
     const selectedDateStr = moment(date).format("YYYY-MM-DD");
-    const now = moment();
 
     courses.forEach((course) => {
       const courseClasses = data.filter((cls) => {
@@ -177,7 +176,6 @@ const Home = () => {
     }
   }
 
-  const nowTime = moment.tz("Asia/Kolkata");
 
   // Lunch Time: 10:05 AM - 11:30 AM
   const lunchStart = moment.tz(
@@ -203,8 +201,8 @@ const Home = () => {
     "Asia/Kolkata"
   );
 
-  const isLunchTime = nowTime.isBetween(lunchStart, lunchEnd);
-  const isPrayerTime = nowTime.isBetween(prayerStart, prayerEnd);
+  const isLunchTime = now.isBetween(lunchStart, lunchEnd);
+  const isPrayerTime = now.isBetween(prayerStart, prayerEnd);
 
   return (
     <div className="container py-4">
@@ -267,12 +265,24 @@ const Home = () => {
                 </div>
               </div>
 
-              {isLunchTime ? (
-                <div className="text-center p-5 bg-warning rounded-3">
+              {/* month limit no classes after 16 November */}
+              {moment(selectedDate).isAfter(
+                moment(`${new Date().getFullYear()}-11-16T23:59:59`).tz(
+                  "Asia/Kolkata"
+                )
+              ) ? (
+                <div className="text-center p-5 bg-danger text-white rounded-3 exam-time">
+                  <h2 className="fw-bold">🎓 Exam Time</h2>
+                  <p className="fs-5">
+                    Regular classes have ended. Best wishes for your exams!
+                  </p>
+                </div>
+              ) : isLunchTime ? (
+                <div className="text-center p-5 bg-warning rounded-3 lunch-time">
                   <h2 className="text-danger fw-bold">🍱 LUNCH TIME</h2>
                 </div>
               ) : isPrayerTime ? (
-                <div className="text-center p-5 bg-info rounded-3">
+                <div className="text-center p-5 bg-info rounded-3 prayer-time">
                   <h2 className="text-primary fw-bold">🙏 PRAYER TIME</h2>
                 </div>
               ) : (
