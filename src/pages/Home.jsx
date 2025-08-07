@@ -9,6 +9,7 @@ const getWeekdayAbbreviation = (date) => {
   return weekdays[dayIndex];
 };
 
+// for live class
 const isClassLive = (classTime, date) => {
   const [startStr, endStr] = classTime.split(" - ");
   const selectedDateStr = moment(date).format("YYYY-MM-DD");
@@ -176,7 +177,6 @@ const Home = () => {
     }
   }
 
-  // Define fixed time ranges in Asia/Kolkata timezone
   const nowTime = moment.tz("Asia/Kolkata");
 
   // Lunch Time: 10:05 AM - 11:30 AM
@@ -191,14 +191,14 @@ const Home = () => {
     "Asia/Kolkata"
   );
 
-  // Prayer Time: 11:30 AM - 12:50 PM
+  // Prayer Time: 11:30 AM - 11:45 PM
   const prayerStart = moment.tz(
     moment(selectedDate).format("YYYY-MM-DD") + " 11:30 AM",
     "YYYY-MM-DD hh:mm A",
     "Asia/Kolkata"
   );
   const prayerEnd = moment.tz(
-    moment(selectedDate).format("YYYY-MM-DD") + " 12:50 PM",
+    moment(selectedDate).format("YYYY-MM-DD") + " 11:45 AM",
     "YYYY-MM-DD hh:mm A",
     "Asia/Kolkata"
   );

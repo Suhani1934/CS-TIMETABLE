@@ -3,6 +3,12 @@ import "react-calendar/dist/Calendar.css";
 import "./CalendarSection.css"; 
 import { Card } from "react-bootstrap";
 
+// Function to get dynamic minDate for each year
+const getMinDate = (selectedDate) => {
+  const year = selectedDate.getFullYear();
+  return new Date(year, 10, 16); // Month is 0-based (10 = November)
+};
+
 // Right side calender section
 const CalendarSection = ({ selectedDate, onDateChange }) => {
   return (
@@ -13,6 +19,11 @@ const CalendarSection = ({ selectedDate, onDateChange }) => {
             onChange={onDateChange}
             value={selectedDate}
             className="border-0"
+
+            // Calendar should start from 2002
+            minDetail="decade"
+            minDate={new Date(2002, 0, 1)}
+            
             tileClassName={({ date }) =>
               date.toDateString() === selectedDate.toDateString() ? "bg-primary text-white rounded" : ""
             }
