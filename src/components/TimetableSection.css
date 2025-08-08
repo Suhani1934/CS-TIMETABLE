@@ -17,13 +17,13 @@
 }
 
 .lunch-time::before {
-  content: "🍱 ";
+  content: "";
   /* animation: emojiBounce 1s infinite alternate; */
   display: inline-block;
 }
 
 .prayer-time::before {
-  content: "🙏 ";
+  content: "";
   /* animation: emojiPulse 1.2s infinite ease-in-out; */
   display: inline-block;
 }

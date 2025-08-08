@@ -166,8 +166,7 @@ const Home = () => {
     course:
       "https://drive.google.com/file/d/1J4Sl4OrYY1fF-wGyFeKNrlFIm6RoORiv/view?usp=sharing",
     room: "https://drive.google.com/file/d/1WkmezzpsetGi4fySQulAMTLOUKGOL3jC/view?usp=drive_link",
-    freeslots:
-      "https://drive.google.com/file/d/1s7oA2K6layM7rQDMoZT1J1hhIaS-Rj7V/view?usp=sharing",
+
   };
 
   function handleDownload(option) {
@@ -176,7 +175,6 @@ const Home = () => {
       window.open(link, "_blank");
     }
   }
-
 
   // Lunch Time: 10:05 AM - 11:30 AM
   const lunchStart = moment.tz(
@@ -213,7 +211,7 @@ const Home = () => {
           <div className="card shadow-sm border-0">
             <div className="card-body">
               <h5 className="card-title text-primary fw-bold mb-3">
-                📅 Select Date
+                Select Date
               </h5>
               <CalendarSection
                 selectedDate={selectedDate}
@@ -221,7 +219,7 @@ const Home = () => {
               />
             </div>
           </div>
-          <TimetableSection/>
+          <TimetableSection />
         </div>
 
         {/* Right: Classes Section */}
@@ -230,7 +228,7 @@ const Home = () => {
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h5 className="card-title text-success fw-bold mb-0">
-                  📚 Classes on{" "}
+                  Classes on{" "}
                   <span className="text-dark">
                     {moment(selectedDate).format("dddd, MMMM D, YYYY")}
                   </span>
@@ -248,7 +246,7 @@ const Home = () => {
 
                   <div className="mb-4">
                     <label className="form-label fw-bold">
-                      📥 Download Timetable
+                      Download Timetable
                     </label>
                     <select
                       className="form-select w-auto d-inline-block me-2"
@@ -261,7 +259,6 @@ const Home = () => {
                       <option value="faculty">Faculty-wise</option>
                       <option value="course">Course-wise</option>
                       <option value="room">Room-wise</option>
-                      <option value="freeslots">View Free Slots</option>
                     </select>
                   </div>
                 </div>
@@ -274,18 +271,18 @@ const Home = () => {
                 )
               ) ? (
                 <div className="text-center p-5 bg-danger text-white rounded-3 exam-time">
-                  <h2 className="fw-bold">🎓 Exam Time</h2>
+                  <h2 className="fw-bold">Exam Time</h2>
                   <p className="fs-5">
                     Regular classes have ended. Best wishes for your exams!
                   </p>
                 </div>
               ) : isLunchTime ? (
                 <div className="text-center p-5 bg-warning rounded-3 lunch-time">
-                  <h2 className="text-danger fw-bold">🍱 LUNCH TIME</h2>
+                  <h2 className="text-danger fw-bold">LUNCH TIME</h2>
                 </div>
               ) : isPrayerTime ? (
                 <div className="text-center p-5 bg-info rounded-3 prayer-time">
-                  <h2 className="text-primary fw-bold">🙏 PRAYER TIME</h2>
+                  <h2 className="text-primary fw-bold">PRAYER TIME</h2>
                 </div>
               ) : (
                 <ClassDetailsSection

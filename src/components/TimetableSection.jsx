@@ -6,7 +6,7 @@ const TimetableSection = () => {
   const [timetable, setTimetable] = useState([]);
   const SHEET_ID = import.meta.env.VITE_SHEET_ID;
   const API_KEY = import.meta.env.VITE_GOOGLE_SHEET_API_KEY;
-  const FREE_SLOT_BCA = import.meta.env.VITE_FREE_SLOT_BCA_I;
+  const FREE_SLOT_BCA = import.meta.env.VITE_MASTER_FREE_SLOT;
 
   useEffect(() => {
     axios
@@ -32,14 +32,16 @@ const TimetableSection = () => {
 
   return (
     <div className="table-responsive mt-4">
-      <h4 className="text-center text-primary">Free Slot BCA/BIT 1st year</h4>
-      <table className="table table-bordered table-striped text-center">
+      <h4 className="text-center text-primary">📅 Weekly Timetable</h4>
+      <table className="table table-bordered table-striped text-center align-middle">
         <thead className="table-dark">
           <tr>
             <th>Days</th>
+            <th>Courses</th>
+            <th>Year</th>
             {timetable.length > 0 &&
               Object.keys(timetable[0])
-                .filter((key) => key !== "Days")
+                .filter((key) => !["Days", "Courses", "Year"].includes(key))
                 .map((time, index) => <th key={index}>{time}</th>)}
           </tr>
         </thead>
@@ -48,8 +50,10 @@ const TimetableSection = () => {
             timetable.map((row, i) => (
               <tr key={i}>
                 <td className="fw-bold">{row["Days"]}</td>
+                <td>{row["Courses"]}</td>
+                <td>{row["Year"]}</td>
                 {Object.keys(row)
-                  .filter((key) => key !== "Days")
+                  .filter((key) => !["Days", "Courses", "Year"].includes(key))
                   .map((key, j) => {
                     const cell = row[key];
                     let cellClass = "";
